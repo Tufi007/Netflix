@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Tufi007/Netflix/issues"
   },
-  "homepage": "https://github.com/Tufi007/Netflix#readme"
+  "homepage": "https://github.com/Tufi007/Netflix#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
