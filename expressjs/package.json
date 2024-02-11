@@ -1,0 +1,24 @@
+{
+  "name": "netflix",
+  "version": "1.0.0",
+  "description": "NETFLIX clone using MERN",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tufi007/Netflix.git"
+  },
+  "author": "Taufeeq Rehman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tufi007/Netflix/issues"
+  },
+  "homepage": "https://github.com/Tufi007/Netflix#readme",
+  "dependencies": {
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2"
+  }
+}
