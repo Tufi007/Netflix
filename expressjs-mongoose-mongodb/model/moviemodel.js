@@ -4,7 +4,7 @@ const moviesSchema = new mongoose.Schema({
   title: {
     type: String,
     require: true,
-    validate: [validator.isAlpha, "Movie name should be Of Alphabhits only"],
+    validate: [validator.isAlphanumeric , "Movie name should be Of Alphabhits only"],
     maxlength: [100, " The length of should not exceed by 30"],
     trim: true,
     unique: true,
@@ -33,7 +33,7 @@ const moviesSchema = new mongoose.Schema({
   },
   releaseYear: {
     type: Number,
-    required: [true, "Release year is required field!"],
+    required: [true, "Release`${this.vlaue}` year is required field!"],
   },
   releaseDate: {
     type: Date,

@@ -10,8 +10,33 @@ const responsefunction = (status, data) => {
   };
 };
 exports.getallmovies = async (req, res) => {
-  data = await movies.find({});
-  res.status(200).json(responsefunction("succes", data));
+  let query = JSON.stringify(req.query);
+  query = query.replace(/\b(gte|lte|gt|lt)\b/g, (el) => `$${el}`);
+  const querystr = JSON.parse(query);
+  console.log(querystr);
+  const exclude=['sort','limit','field','page'];
+  exclude.forEach((el)=>{
+    delete querystr[el];
+  })
+
+  let dataquery = movies.find(querystr);
+  console.log(querystr);
+  if (req.query.sort) {
+    let sortquery= req.query.sort;
+    sortquery= sortquery.split(',').join(' ');
+    console.log(sortquery);
+    dataquery = dataquery.sort(sortquery);
+   
+  }
+  if(req.query.field){
+    let field= req.query.field;
+    field=field.split(',').join(' ');
+    dataquery= dataquery.select(field);
+  }
+ const data= await dataquery;
+  // console.log(data);
+   res.status(200).json(responsefunction("succes", data));
+  
 };
 exports.creatmovie = async (req, res) => {
   try {
@@ -59,6 +84,7 @@ exports.updatemovie = async (req, res) => {
 exports.deletemovie = async (req, res) => {
   try {
     const id = req.params.id;
+
     const found = await movies.findByIdAndDelete(id);
     if (found) res.status(200).json(responsefunction("status", found));
   } catch (err) {
