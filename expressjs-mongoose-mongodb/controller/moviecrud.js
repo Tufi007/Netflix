@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const movies = require("./../model/moviemodel");
+const filterapi = require("./../utlility/filterapi");
 // let movies = JSON.parse(fs.readFileSync("./data.json"));
 const responsefunction = (status, data) => {
   return {
@@ -9,34 +10,54 @@ const responsefunction = (status, data) => {
     data: data,
   };
 };
-exports.getallmovies = async (req, res) => {
-  let query = JSON.stringify(req.query);
-  query = query.replace(/\b(gte|lte|gt|lt)\b/g, (el) => `$${el}`);
-  const querystr = JSON.parse(query);
-  console.log(querystr);
-  const exclude=['sort','limit','field','page'];
-  exclude.forEach((el)=>{
-    delete querystr[el];
-  })
-
-  let dataquery = movies.find(querystr);
-  console.log(querystr);
-  if (req.query.sort) {
-    let sortquery= req.query.sort;
-    sortquery= sortquery.split(',').join(' ');
-    console.log(sortquery);
-    dataquery = dataquery.sort(sortquery);
-   
-  }
-  if(req.query.field){
-    let field= req.query.field;
-    field=field.split(',').join(' ');
-    dataquery= dataquery.select(field);
-  }
- const data= await dataquery;
-  // console.log(data);
-   res.status(200).json(responsefunction("succes", data));
+exports.agg = async (req, res) => {
+  const data = await movies.aggregate([
+    { $match: { ratings: { $gte: 7 } } },
+    {
+      $group: {
+        _id: "$releaseYear",
+        avgratings: { $avg: "$ratings" },
+        avgtotalratings: { $avg: "$totalRatings" },
+        maxprice: { $max: "$price" },
+        movies: { $sum: 1 },
+      },
+    },{
+      $sort:{minprice:1}
+    }
+  ]);
+  res.json(responsefunction("succes", data));
+};
+exports.getMovieByGenre = async (req, res) => {
   
+      const genre = req.params.genre;
+      const data = await movies.aggregate([
+          {$unwind: '$genres'},
+          {$group: {
+              _id: '$genres',
+              movieCount: { $sum: 1},
+              movies: {$push: '$title'}, 
+          }},
+          {$addFields: {genre: "$_id"}},
+          // {$project: {_id: 0}},
+          // {$sort: {movieCount: -1}},
+          //{$limit: 6}
+          //{$match: {genre: genre}}
+      ]);
+    res.json(responsefunction('succes',data))}
+exports.highestRated = (req, res, next) => {
+  req.query.limit = "5";
+  req.query.sort = "-ratings";
+  next();
+};
+exports.getallmovies = async (req, res) => {
+  const filterapiobj = new filterapi(movies.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const data = await filterapiobj.query;
+  // console.log(data);
+  res.status(200).json(responsefunction("succes", data));
 };
 exports.creatmovie = async (req, res) => {
   try {

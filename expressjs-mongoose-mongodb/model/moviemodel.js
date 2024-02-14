@@ -68,7 +68,13 @@ const moviesSchema = new mongoose.Schema({
     require: [true, "Price is required field!"],
   },
   createdBy: String,
+},{
+  toJSON:{virtuals:true},
+  toObject:{virtuals:true},
 });
+moviesSchema.virtual('totalhoures').get(function(){
+  return this.duration/60;
+})
 const movie = mongoose.model("netflix", moviesSchema);
 module.exports = movie;
 //{ plot: {
