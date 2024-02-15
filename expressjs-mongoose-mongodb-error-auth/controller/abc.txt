@@ -1,0 +1,36 @@
+// let query = JSON.stringify(req.query);
+// query = query.replace(/\b(gte|lte|gt|lt)\b/g, (el) => `$${el}`);
+// const querystr = JSON.parse(query);
+// console.log(querystr);
+// const exclude=['sort','limit','field','page'];
+// exclude.forEach((el)=>{
+//   delete querystr[el];
+// })
+
+// let dataquery = movies.find(querystr);
+// console.log(querystr);
+// // let length= dataquery.length;
+// if (req.query.sort) {
+//   let sortquery= req.query.sort;
+//   sortquery= sortquery.split(',').join(' ');
+//   console.log(sortquery);
+//   dataquery = dataquery.sort(sortquery);
+
+// }
+// if(req.query.field){
+//   let field= req.query.field;
+//   field=field.split(',').join(' ');
+//   dataquery= dataquery.select(field);
+
+// }
+// if(req.query.page){
+//   // const end = await dataquery.length;
+//   // console.log(title);
+//   const page= req.query.page*1||1;
+//   const limit = req.query.limit*1||5;
+//   const skip = (page-1)*limit;
+//   if(skip>limit){
+//     return  res.status(404).json(responsefunction("succes", data));
+//   }
+//   dataquery = dataquery.skip(skip).limit(limit);
+// }
