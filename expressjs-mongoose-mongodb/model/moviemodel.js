@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const fs = require('fs');
 const moviesSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -63,7 +64,7 @@ const moviesSchema = new mongoose.Schema({
     type: [String],
     require: [true, "actors is required field!"],
   },
-  price: {
+  price :{
     type: Number,
     require: [true, "Price is required field!"],
   },
@@ -74,7 +75,22 @@ const moviesSchema = new mongoose.Schema({
 });
 moviesSchema.virtual('totalhoures').get(function(){
   return this.duration/60;
-})
+});
+moviesSchema.pre('save',function(next){
+ this.createdBy="AdminTaufeeq";
+ next();
+});
+moviesSchema.post('save',function(doc,next){
+const data = `following movie${doc.title} has been added by ${doc.createdBy}`;
+fs.writeFileSync('./controller/abc.txt',data,{flag:'a'},(err)=>{
+  console.log(err);
+});
+next();
+});
+moviesSchema.pre(/^find/,function(next){
+ this.find({releaseDate:{$lte: Date.now()}});
+ next();
+});
 const movie = mongoose.model("netflix", moviesSchema);
 module.exports = movie;
 //{ plot: {
