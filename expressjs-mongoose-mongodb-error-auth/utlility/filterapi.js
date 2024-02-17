@@ -16,6 +16,8 @@ class filterapi {
     });
     console.log(querystr);
     this.query = this.query.find(querystr);
+    // console.log(this.query);
+    // if(!(this.query)) return next(err);
     return this;
   }
   sort() {
@@ -46,7 +48,7 @@ class filterapi {
       // const end = await dataquery.length;
       // console.log(length);
       const page = this.querystr.page * 1 || 1;
-      const limit = this.querystr.limit * 1 || 5;
+      const limit = this.querystr.limit * 1 || 10;
       const skip = (page - 1) * limit;
       console.log("hrllooo");
       if (skip > limit) {
