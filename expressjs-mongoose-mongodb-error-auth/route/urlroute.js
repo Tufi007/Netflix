@@ -1,7 +1,8 @@
 const express = require("express");
 const moviecrud = require("../controller/moviecrud");
+const authController = require("../controller/authcontroller");
 const router = express.Router();
-router.route("/").get(moviecrud.getallmovies).post(moviecrud.creatmovie);
+router.route("/").get(authController.userverify,moviecrud.getallmovies).post(moviecrud.creatmovie);
 router
   .route("/highestRated")
   .get(moviecrud.highestRated, moviecrud.getallmovies);
@@ -11,6 +12,6 @@ router
   .route("/:id")
   .get(moviecrud.getmovie)
   .patch(moviecrud.updatemovie)
-  .delete(moviecrud.deletemovie);
+  .delete(authController.userverify,authController.checkRole('admin1','admin2'),moviecrud.deletemovie);
 
 module.exports = router;

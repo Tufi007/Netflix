@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const customeError = require("../utlility/customerror");
 const userSchema = new mongoose.Schema({
   username: { type: String, required: [true, "username required"] },
   email: {
@@ -25,6 +27,17 @@ const userSchema = new mongoose.Schema({
       message: "confirm passsword not equal to password",
     },
   },
+  passwordChangedat:{
+    type:Date,
+    default:new Date()
+  },
+  role:{
+    type:String,
+    enum:['user','admin1','admin2'],
+    default:'user'
+  },
+  resettoken:String,
+  resettokenexpires:Date,
 });
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -32,5 +45,21 @@ userSchema.pre("save", async function (next) {
   this.confirmPassword = undefined;
   next();
 });
+userSchema.methods.comparePassword = async function (pass){
+  return await bcrypt.compare(pass,this.password);
+};
+userSchema.methods.checkPassChanged = async function(JWTtimestamp){
+  if (this.passwordChangedat) {
+  const changedat = parseInt(this.passwordChangedat.getTime()/1000,10);
+  return changedat>JWTtimestamp;
+}};
+userSchema.methods.makeresettoken= async function(){
+  const resettoken=  crypto.randomBytes(2).toString('hex');
+  this.resettoken=  crypto.createHash('sha256').update(resettoken).digest('hex');
+  this.resettokenexpires = Date.now() + 10*60*1000;
+  console.log(`${resettoken} =============${this.resettoken}============${this.resettokenexpires}`);
+ 
+  return resettoken;
+}
 const user = mongoose.model("netflixuser", userSchema);
 module.exports = user;
