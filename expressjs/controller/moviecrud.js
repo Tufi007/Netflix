@@ -29,7 +29,7 @@ const responsefunction = (status, data) => {
     }
   };
   exports.getmovie = (req, res) => {
-    console.log(req.params);
+  
     const foundmovie = movies.find((movie) => {
       return movie.id == req.params.id * 1;
     });
@@ -49,7 +49,6 @@ const responsefunction = (status, data) => {
       let index= movies.indexOf(foundmovie);
       Object.assign(foundmovie,req.body);
       movies[index]=foundmovie;
-      console.log(foundmovie);
       const newmovie= JSON.stringify(movies);
       fs.writeFile('./data.json',newmovie,(err)=>{
         res.status(202).json(responsefunction('updated',foundmovie));
@@ -60,11 +59,11 @@ const responsefunction = (status, data) => {
   exports.deletemovie = (req,res) => {
     const id = req.params.id*1;
     const foundmovie= movies.find((movie) => movie.id === id);
-    console.log(foundmovie);
+ 
     if(!foundmovie) return res.status(404).json(responsefunction('no data found'));
     if(foundmovie){
       const index= movies.indexOf(foundmovie);
-      console.log(index);
+     
       movies.splice(index,1);
       const newmovie= JSON.stringify(movies);
       fs.writeFile('./data.json',newmovie,(err)=>{

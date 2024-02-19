@@ -83,7 +83,6 @@ moviesSchema.pre('save',function(next){
 moviesSchema.post('save',function(doc,next){
 const data = `following movie${doc.title} has been added by ${doc.createdBy}`;
 fs.writeFileSync('./controller/abc.txt',data,{flag:'a'},(err)=>{
-  console.log(err);
 });
 next();
 });

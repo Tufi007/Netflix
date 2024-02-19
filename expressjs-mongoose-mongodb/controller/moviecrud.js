@@ -56,16 +56,16 @@ exports.getallmovies = async (req, res) => {
     .limitFields()
     .paginate();
   const data = await filterapiobj.query;
-  // console.log(data);
+  
   res.status(200).json(responsefunction("succes", data));
 };
 exports.creatmovie = async (req, res) => {
   try {
     const data = req.body;
     const movietitle = req.body.title;
-    console.log(movietitle);
+ 
     const found = await movies.find({ title: movietitle });
-    console.log(found);
+ 
     if (found) {
       const movie = await movies.create(data);
       res.status(201).json(responsefunction("succes", movie));
@@ -79,9 +79,9 @@ exports.creatmovie = async (req, res) => {
 exports.getmovie = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id);
+  
     const found = await movies.find({ title: id });
-    console.log(found);
+    
     if (found) res.status(200).json(responsefunction("succes", found));
   } catch (err) {
     res.status(404).json(responsefunction("failed", err.message));
