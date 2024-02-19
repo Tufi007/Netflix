@@ -2,17 +2,21 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const Movie = require('./model/moviemodel');
-const app = require('./app')
+const express= require('express');
+const app= express();
+// const app = require('./app');
 
 dotenv.config({path: './config.env'});
 
 //CONNECT TO MONGODB
-mongoose.connect(process.env.CONN_STR).then((conn) => {
-    console.log('DB Connection Successful');
-}).catch((error) => {
-    console.log('Some error has occured');
+mongoose.connect(process.env.CONN_STR).then((conn)=>{
+    console.log('database connected');
 });
 
+PORT= process.env.PORT;
+app.listen(PORT,(req,res)=>{
+    console.log('server connected');
+})
 //READ MOVIES.JSON FILE
 const movies = JSON.parse(fs.readFileSync('./data.json', 'utf-8'));
 
@@ -27,10 +31,6 @@ const deleteMovies = async () => {
     }
     process.exit();
 }
-PORT= process.env.PORT;
-app.listen(PORT,(req,res)=>{
-    console.log('server connected');
-})
 
 //IMPORT MOVIES DATA TO MONGODB COLLECTION
 const importMovies = async () => {

@@ -21,9 +21,15 @@
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.1",
     "morgan": "^1.10.0",
-    "validator": "^13.11.0"
+    "nodemailer": "^6.9.9",
+    "validator": "^13.11.0",
+    "xss-req-sanitizer": "^1.0.4"
   }
 }

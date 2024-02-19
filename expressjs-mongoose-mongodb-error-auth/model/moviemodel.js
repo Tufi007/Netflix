@@ -5,7 +5,7 @@ const moviesSchema = new mongoose.Schema({
   title: {
     type: String,
     require: true,
-    validate: [validator.isAlphanumeric , "Movie name should be Of Alphabhits only"],
+    validate: [validator.isAscii, "Movie name should be Of Alphabhits only"],
     maxlength: [100, " The length of should not exceed by 30"],
     trim: true,
     unique: true,
@@ -62,6 +62,7 @@ const moviesSchema = new mongoose.Schema({
   },
   actors: {
     type: [String],
+    select:false,
     require: [true, "actors is required field!"],
   },
   price :{

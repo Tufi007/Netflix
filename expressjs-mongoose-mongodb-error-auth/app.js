@@ -1,13 +1,28 @@
 const express = require("express");
 const app = express();
+const limiter= require('express-rate-limit');
+const helmet= require('helmet');
+const hpp= require('hpp');
+const xss= require('xss-req-sanitizer');
+const sanitize= require('express-mongo-sanitize');
 const router = require("./route/urlroute");
 const authRouter = require("./route/authrouter");
 const responsefunction = require('./controller/moviecrud');
 const morgan = require("morgan");
 const customeError = require("./utlility/customerror");
 const globalErrorhandler= require('./controller/errorHandler')
-app.use(express.json());
+app.use(helmet());
 
+const limit= limiter({
+    max:3,
+    windowMs:60*10*1000,
+    message:'too many requests from the same ip address try again after sometimer....'
+});
+app.use('/user',limit);
+app.use(express.json({limit:500}));
+app.use(hpp({whitelist:['price','duration','releaseYear','ratings','totalRating','genres','totalhoures']}));
+app.use(sanitize());
+app.use(xss());
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use("/user",authRouter);
 app.use("/", router);

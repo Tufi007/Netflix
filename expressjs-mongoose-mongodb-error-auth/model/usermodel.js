@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+// const plugins = require("mongoose-user");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
@@ -7,6 +8,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: [true, "username required"] },
   email: {
     type: String,
+    Selection:false,
     required: [true, "email required"],
     validate: [validator.isEmail, "write email correctly"],
     unique: true,
@@ -15,7 +17,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "password required"],
-    // minlength:8
+    minlength:8,
+  
   },
   confirmPassword: {
     type: String,
@@ -60,6 +63,14 @@ userSchema.methods.makeresettoken= async function(){
   console.log(`${resettoken} =============${this.resettoken}============${this.resettokenexpires}`);
  
   return resettoken;
-}
+};
+userSchema.methods.resetPassword= async function(newpass){
+  this.resettoken=undefined;
+  this.resettokenexpires=undefined;
+  this.password=newpass;
+  this.confirmPassword=newpass;
+ this.passwordChangedat = Date.now();
+  return this.passwordChangedat;
+};
 const user = mongoose.model("netflixuser", userSchema);
 module.exports = user;

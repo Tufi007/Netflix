@@ -5,12 +5,25 @@ const filterapi = require("./../utlility/filterapi");
 const errorhandler = require("./errorHandler");
 const customeError = require("../utlility/customerror");
 const asyncerrorhandler = require("../utlility/asyncerrorhandler");
+
 exports.responsefunction = responsefunction = (status, data) => {
+  // const token =data.tokenid;
+  // const res= data.res;
+  // const options={maxAge:new Date(Date.now()+10*60*1000),
+  // httpOnly:true};
+  // if(process.env.NODE_ENV=="production"){
+  //   options.secure=true;
+  // };
+  // res.cookie("jwt",token,options);
   return {
     status: status,
     length: data.length,
     data: data,
   };
+  // res.status(200).json({
+  //   datauser:data.usercreated,
+  //   token
+  // });
 };
 
 exports.agg = asyncerrorhandler(async (req, res, next) => {

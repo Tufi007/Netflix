@@ -1,0 +1,20 @@
+const app= require('./../server');
+const nodemailer = require("nodemailer");
+const sendmail =  async function (option) {
+    var transporter = await nodemailer.createTransport({
+        host: "sandbox.smtp.mailtrap.io",
+        port: 2525,
+        auth: {
+          user: "f22fb77afb91eb",
+          pass: "19c8cce48bb18c"
+        }
+      });
+  console.log(transporter);
+  await transporter.sendMail({
+    from: "taufeeqownero<netflix@gmail.com>",
+    to: option.to,
+    subject: option.subject,
+    text: option.message,
+  });
+};
+module.exports = sendmail;
