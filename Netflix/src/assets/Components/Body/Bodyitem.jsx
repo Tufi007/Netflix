@@ -6,7 +6,7 @@ import { IoMdChatbubbles } from "react-icons/io";
 function Bodyitem({ movie }) {
   return (
     <>
-      <div className={`${styles.body} ${styles.html}`}>
+      <div className={`${styles.card_container}`}>
         <div className={styles.movie_card} id={styles.bright}>
           <div className={styles.info_section}>
             <div className={styles.movie_header}>

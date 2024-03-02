@@ -4,9 +4,10 @@ import App from "./App.jsx";
 import Login from "./assets/Components/Loginin/login.jsx";
 import Body, { loadInitialData } from "./assets/Components/Body/Body.jsx";
 import "./index.css";
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Signup from "./assets/Components/Signup/Signup.jsx";
-import axios from "axios";
+import { Provider } from "react-redux";
+import store from "./assets/Store/Mainstore.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +29,8 @@ const router = createBrowserRouter([
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+    <Provider store={store}>
+      <RouterProvider router={router}></RouterProvider>
+    </Provider>
   </React.StrictMode>
 );

@@ -44,6 +44,12 @@ exports.agg = asyncerrorhandler(async (req, res, next) => {
   ]);
   res.json(responsefunction("succes", data));
 });
+exports.highestRated = async(req,res, next) => {
+  req.query.limit = "5";
+  req.query.sort = "-ratings";
+  console.log('here i am');
+  next(); 
+}
 exports.getMovieByGenre = asyncerrorhandler(async (req, res, next) => {
   const genre = req.params.genre;
   const data = await movies.aggregate([
@@ -63,14 +69,10 @@ exports.getMovieByGenre = asyncerrorhandler(async (req, res, next) => {
   ]);
   res.json(responsefunction("succes", data));
 });
-exports.highestRated = asyncerrorhandler((req, res, next) => {
-  req.query.limit = "5";
-  req.query.sort = "-ratings";
-  next();
-});
+
 exports.getallmovies = asyncerrorhandler(async (req, res, next) => {
   //  try{
-  const filterapiobj = new filterapi(movies.find(), req.query)
+  const filterapiobj = await new filterapi(movies.find(), req.query)
     .filter()
     .sort()
     .limitFields()
@@ -84,6 +86,7 @@ exports.getallmovies = asyncerrorhandler(async (req, res, next) => {
     );
     next(error);
   }
+console.log(data);
 
   res.status(200).json(responsefunction("succes", data));
   //
@@ -104,8 +107,8 @@ exports.creatmovie = asyncerrorhandler(async (req, res, next) => {
 exports.getmovie = asyncerrorhandler(async (req, res, next) => {
   // try {
   const id = req.params.id;
-
-  const found = await movies.findById(id);
+ console.log(req.query);
+  const found = await movies.findOne({title:id});
 
   if (!found) {
     const error = new customeError(`given movie with ${id} not found`, 404);

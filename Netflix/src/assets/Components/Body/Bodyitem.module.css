@@ -8,15 +8,20 @@
   color: rgba(23, 123, 238, 0.911);
 }
 
-html,
-body {
+.card_container {
+  display: flex;
   margin: 0;
   background: rgb(255, 255, 255);
   font-family: "Montserrat", helvetica, arial, sans-serif;
   font-size: 14px;
   font-weight: 400;
 }
+/* .eachcard{
+  max-width:min-content;
+  max-height:min-content; */
+  
 
+/* } */
 .link {
   display: block;
   text-align: center;

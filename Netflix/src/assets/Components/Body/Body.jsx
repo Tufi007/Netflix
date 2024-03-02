@@ -5,11 +5,11 @@ import { useLoaderData } from "react-router-dom";
 
 function Body() {
   const movies = useLoaderData();
-
+  
   return (
     <>
       <div className="movie_container">
-        {console.log(movies)}
+        {/* {console.log(movies)} */}
         {movies.data.map((movie) => (
           <Bodyitem key={movie._id} movie={movie}></Bodyitem>
         ))}
