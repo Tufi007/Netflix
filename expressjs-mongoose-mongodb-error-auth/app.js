@@ -21,7 +21,7 @@ const limit= limiter({
 });
 app.use('/user',limit);
 app.use(cors());
-app.use(express.json({limit:500}));
+app.use(express.json({limit:50000000}));
 
 app.use(hpp({whitelist:['price','duration','releaseYear','ratings','totalRating','genres','totalhoures']}));
 app.use(sanitize());

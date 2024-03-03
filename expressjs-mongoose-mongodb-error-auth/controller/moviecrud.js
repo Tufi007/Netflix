@@ -86,7 +86,7 @@ exports.getallmovies = asyncerrorhandler(async (req, res, next) => {
     );
     next(error);
   }
-console.log(data);
+// console.log(data);
 
   res.status(200).json(responsefunction("succes", data));
   //
@@ -100,7 +100,7 @@ exports.creatmovie = asyncerrorhandler(async (req, res, next) => {
  
   if (found) {
     const movie = await movies.create(data);
-    res.status(201).json(responsefunction("succes", movie));
+    res.status(201).json(responsefunction("succes", [movie]));
   }
   
 });
@@ -114,7 +114,7 @@ exports.getmovie = asyncerrorhandler(async (req, res, next) => {
     const error = new customeError(`given movie with ${id} not found`, 404);
     next(error);
   }
-  res.status(200).json(responsefunction("succes", found));
+  res.status(200).json(responsefunction("succes", [found]));
 });
 exports.updatemovie = asyncerrorhandler(async (req, res, next) => {
 
@@ -127,7 +127,7 @@ exports.updatemovie = asyncerrorhandler(async (req, res, next) => {
     const error = new customeError(`given movie with ${id} not found`, 404);
     next(error);
   }
-  res.status(200).json(responsefunction("succes", found));
+  res.status(200).json(responsefunction("succes", [found]));
   
 });
 
@@ -140,5 +140,5 @@ exports.deletemovie = asyncerrorhandler(async (req, res, next) => {
     next(error);
   }
  
-  res.status(200).json(responsefunction("status", found));
+  res.status(200).json(responsefunction("status", [found]));
 });

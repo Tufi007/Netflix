@@ -47,10 +47,10 @@ const moviesSchema = new mongoose.Schema({
   genres: {
     type: [String],
     required: [true, "Genres is required field!"],
-    // enum: {
-    //      values: ["Action", "Adventure", "Sci-Fi", "Thriller", "Crime", "Drama", "Comedy", "Romance", "Biography"],
-    //      message: "This genre does not exist"
-    // }
+    enum: {
+         values: ["Action", "Adventure", "Sci-Fi", "Thriller", "Crime", "Drama", "Comedy", "Romance", "Biography"],
+         message: "This genre does not exist"
+    }
   },
   directors: {
     type: [String],

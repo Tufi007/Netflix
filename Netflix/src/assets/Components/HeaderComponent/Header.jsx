@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { moviesAction } from "./../../Store/Mainstore";
+import { moviesAction, userApi } from "./../../Store/Mainstore";
 import { moviesApi } from "./../../Store/Mainstore";
 import { useEffect } from "react";
 import { useRef } from "react";
+import axios from "axios";
 function Header() {
   // const mov= useSelector(store => store.movies);
   // const dispatch= useDispatch();
@@ -19,14 +20,32 @@ function Header() {
   // }
   // // dispatch(highest(1234));
   // // console.log(mov.fetching);
-  const dispatch= useDispatch();
+  const {fetched,fetching}= useSelector(store => store.movies);
+  const dispatch = useDispatch();
+  
   const search = useRef();
   const filter = useRef();
+  const Sort = useRef();
+  const Field = useRef();
   const handleSearch = (e) => {
     e.preventDefault();
-    const searchquery= search.current.value;
-    const filterquery= filter.current.value;
-    dispatch(moviesApi({searchquery,filterquery}));
+    const headers={authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTRiZmM2MWU1NzYxZWJmMzgzZTMyNSIsImlhdCI6MTcwOTQ5MDExOSwiZXhwIjoxNzA5NDkzNzE5fQ.EbtI3iI-EcD2527iTZe-VfW0xrn6e-Qv_1d3OHmkGe0"};
+    const deletem = async ()=>{
+      const res= await axios.delete("http://127.0.0.1:8000/65d38cdafa6e2a6682061a78",{headers});
+      console.log(res,"see heheheheheheeheh");
+    }
+    // deletem();
+    // dispatch(userApi());
+    const searchquery = search.current.value;
+    const filterquery = filter.current.value;
+    const Sortquery = Sort.current.value;
+    const Fieldquery = Field.current.value;
+    console.log(searchquery,filterquery, Sortquery, Fieldquery);
+
+    if(!fetching){
+    // dispatch(moviesApi({ searchquery, filterquery ,Sortquery,Fieldquery}));
+    // dispatch(moviesAction.fetchingStateControl({fetching:true}));
+    }
   };
   const fromSearch = (e) => {
     console.log(e);
@@ -92,16 +111,51 @@ function Header() {
                     type="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
-                  >
-                    Filter
-                  </button>
+                  ></button>
                   <ul className="dropdown-menu dropdown-menu-dark">
                     <li className="dropdown-item ">
                       Filter
-                      <select ref={filter}  name="filter" id="filter" >
-                        <option   value='ratings[lte]=8' >all</option>
-                        <option value="2017">2017</option>
-                        <option value="2018">2018</option>
+                      <select ref={filter} name="Filter" id="Filter">
+                        <option value="">all</option>
+                        <option
+                          value="releaseYear=2013"
+                        >
+                          2013
+                        </option>
+                        <option
+                          value="releaseYear=2018"
+                        >
+                          2018
+                        </option>
+                      </select>
+                    </li>
+                    <li className="dropdown-item ">
+                      Sort
+                      <select ref={Sort} id="Sort" name="Sort">
+                        <option value="">None</option>
+                        <option value="price">price</option>
+                        <option value="duration">duration</option>
+                      </select>
+                    </li>
+                    <li className="dropdown-item ">
+                      Field
+                      <select ref={Field} name="Field" id="Field">
+                        <option value="">None</option>
+                        <option
+                          value="title"
+                        >
+                          title
+                        </option>
+                        <option
+                          value="genres"
+                        >
+                          genres
+                        </option>
+                        <option
+                          value="totalRating"
+                        >
+                          totalRating
+                        </option>
                       </select>
                     </li>
                   </ul>
@@ -125,8 +179,8 @@ function Header() {
               </a>
               <ul className="dropdown-menu text-small">
                 <li>
-                  <a className="dropdown-item" href="#">
-                    New project...
+                  <a className="dropdown-item" href="/signup">
+                    Signup
                   </a>
                 </li>
                 <li>

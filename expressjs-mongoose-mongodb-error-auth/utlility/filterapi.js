@@ -14,9 +14,9 @@ class filterapi {
     exclude.forEach((el) => {
       delete querystr[el];
     });
-   
+  //  console.log(querystr);
     this.query = this.query.find(querystr);
-   
+  //  console.log(this);
     // if(!(this.query)) return next(err);
     return this;
   }
