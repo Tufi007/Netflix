@@ -17,7 +17,7 @@ router.route("/movie-state").get(moviecrud.agg);
 router.route("/movie-state-genre").get(moviecrud.getMovieByGenre);
 router
   .route("/:id")
-  .get(moviecrud.getmovie)
+  .get(authController.userverify, moviecrud.getmovie)
   .patch(moviecrud.updatemovie)
   .delete(
     authController.userverify,

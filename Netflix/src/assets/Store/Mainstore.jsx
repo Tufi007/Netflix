@@ -8,39 +8,50 @@ import axios from "axios";
 export const moviesApi = createAsyncThunk(
   "moviesApiexpress",
   async (query, thunkApi) => {
-    // console.log(query);
+    const {headers}=query;
     const search = query.searchquery || "";
     const filter = query.filterquery ? `${query.filterquery}` : "";
     const sort = query.Sortquery ? `&sort=${query.Sortquery}` : "";
     const field = query.Fieldquery ? `&field=${query.Fieldquery}` : "";
-
-    // console.log(search,filter,sort,field,"still here");
     const queryurl = `${search}?${filter}${sort}${field}`;
-    console.log(queryurl,"hellooooo");
-    const res = await axios.get(`http://127.0.0.1:8000/${queryurl}`);
-   const data= await res.data;
+    const res = await axios.get(`http://127.0.0.1:8000/${queryurl}`,{headers});
+    const data = await res.data;
     console.log(data);
     return data;
   }
 );
-export const userApi= createAsyncThunk("user/auth",async(thunkApi)=>{
-  const res= await axios.post('http://127.0.0.1:8000/user/signup',{
-    "username": "t77",
-    "email": "t77@gmail.com",
-    "photo": "bnvkfge",
-    "password": "123456789",
-    "confirmPassword": "123456789",
-    "role": "admin1"
-  });
-  return await res.data;
+export const userApi = createAsyncThunk(
+  "user/auth",
+  async (action, thunkApi) => {
+    const { type } = action;
+
+    if (type == "signup") {
+      const res = await axios.post(
+        "http://127.0.0.1:8000/user/signup",
+        action.data
+      );
+      return await res.data;}
+      if (type == "login") {
+        const res = await axios.post(
+          "http://127.0.0.1:8000/user/login",
+          action.data
+        );
+      console.log(res);
+      return await res.data;
+    }
   
-  // console.log(res);
-})
+});
 export const moviesSlice = createSlice({
   name: "movies",
-  initialState: { fetching: false, fetched: false, error: null, searchdata: null },
+  initialState: {
+    fetching: false,
+    fetched: false,
+    error: null,
+    searchdata: null,
+  },
   reducers: {
     fetchingStateControl: (state, action) => {
+      console.log(action.payload);
       state.fetching = action.payload.fetching;
     },
     initialfetchingStateControl: (state, action) => {
@@ -48,50 +59,58 @@ export const moviesSlice = createSlice({
       state.fetched = action.payload.fetched;
     },
   },
-  extraReducers:(builder) => {
+  extraReducers: (builder) => {
     builder.addCase(moviesApi.fulfilled, (state, action) => {
-      console.log("whithin thunk");
       state.fetched = true;
       state.fetching = false;
-      // console.log(action.payload,"we r here");
       state.searchdata = action.payload;
-      // console.log(state.searchdata);
     });
     builder.addCase(moviesApi.pending, (state, action) => {
-      //  action.payload.abortsignal();
       state.fetching = true;
       state.fetched = false;
     });
     builder.addCase(moviesApi.rejected, (state, action) => {
-      // console.log(action);
-
-      state.error = action.payload;
+      state.error = action.error.message;
+      
     });
-    
   },
-  // extraReducers:(builder)=>{
-  //   builder.addCase(userApi.fulfilled,(state,action)=>{
-  //     console.log(action.payload,"inside thunk of userapi");
-  //   });
-  // }
 });
-export const userSlice= createSlice({
-  name:"user",
-  initialState:{user:null,loggedin:false,token:null},
-  reducers:{},
-  extraReducers:(builder)=>{
-    builder.addCase(userApi.fulfilled,(state,action)=>{
-      console.log(action.payload,"inside thunk of userapi");
-      state.loggedin=true;
-      state.token=action.payload.data.tokenid;
+export const userSlice = createSlice({
+  name: "user",
+  initialState: {
+    user: undefined,
+    loggedin: false,
+    token: undefined,
+    signed: false,
+    loggedout: false,
+  },
+  reducers: {
+    checkuserapi: (state, action) => {},
+    signapi: (state, action) => {},
+    Logout: (state) => {
+      state.loggedout = true;
+      state.loggedin = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(userApi.fulfilled, (state, action) => {
+      state.loggedin = true;
+      state.signed = true;
+      console.log(action.payload);
+      // state.user=action.payload.data.usercreated.username||action.payload.data.userfound.username;
+      state.user = action.payload.data.usercreated||action.payload.data.userfound;
+      state.token = action.payload.data.tokenid;
     });
-  }
+    builder.addCase(userApi.rejected,(state,action)=>{
+      state.error= action.error.message;
+    })
+  },
 });
 
 const store = configureStore({
   reducer: {
     movies: moviesSlice.reducer,
-    user:userSlice.reducer
+    user: userSlice.reducer,
   },
 });
 export const moviesAction = moviesSlice.actions;
